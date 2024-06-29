@@ -49,7 +49,7 @@
   },
   "command.help.text.pollSetting.multi-vote": {
     "hash": "sha1-aadf6806b8899a61f1e79282e0f981f30b369634",
-    "other": "Erlaube den Nutzern, für X Antworten abzustimmen"
+    "other": "Erlaube den Nutzern, für X Antworten abzustimmen. Standard ist 0. Wenn X 0 ist, können Nutzer eine unbegrenzte Anzahl von Stimmen abgeben."
   },
   "command.help.text.pollSetting.progress": {
     "hash": "sha1-9b8deba20f6a2fc6221841de9db19c903d28f97f",
@@ -93,7 +93,7 @@
   },
   "dialog.createPoll.setting.multi": {
     "hash": "sha1-2620d65ec5d950990264c88b2ce52717948d269b",
-    "other": "Die Anzahl der Stimmen, die ein Nutzer hat."
+    "other": "Die Anzahl der Stimmen, die ein Nutzer hat. 0 bedeutet, dass Nutzer für alle Optionen abstimmen können, auch nachdem Optionen hinzugefügt wurden."
   },
   "dialog.delete.submitLabel": {
     "hash": "sha1-f6fdbe48dc54dd86f63097a03bd24094dedd713a",
@@ -168,7 +168,7 @@
   },
   "poll.newPoll.votesettings.invalidSetting": {
     "hash": "sha1-bf96d6b01204be0f86727d2253d235272e177ded",
-    "other": "Die Anzahl der Stimmen muss eine positive Zahl und kleiner oder gleich der Anzahl der Antworten sein. Du hast \"{{.MaxVotes}}\" angegeben, aber die Anzahl der Optionen ist \"{{.Options}}\"."
+    "other": "Die Anzahl der Stimmen muss 0 oder eine positive Zahl und kleiner oder gleich der Anzahl der Antworten sein. Du hast \"{{.MaxVotes}}\" angegeben, aber die Anzahl der Optionen ist \"{{.Options}}\"."
   },
   "poll.newPoll.votesettings.unexpectedError": {
     "hash": "sha1-e9d86776544f9cf7effd6db84f9e988b6fbccd29",

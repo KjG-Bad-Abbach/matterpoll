@@ -98,6 +98,11 @@ func (p *MatterpollPlugin) executeCommand(args *model.CommandArgs) (string, *mod
 	creatorID := args.UserId
 	configuration := p.getConfiguration()
 
+	defaultMaxVotes := 1
+	if configuration.UseMultiVotesByDefault {
+		defaultMaxVotes = 0
+	}
+
 	userLocalizer := p.bundle.GetUserLocalizer(creatorID)
 	publicLocalizer := p.bundle.GetServerLocalizer()
 
@@ -150,7 +155,7 @@ func (p *MatterpollPlugin) executeCommand(args *model.CommandArgs) (string, *mod
 		}
 	}
 
-	settings, errMsg := poll.NewSettingsFromStrings(s)
+	settings, errMsg := poll.NewSettingsFromStrings(s, defaultMaxVotes)
 	if errMsg != nil {
 		appErr := &model.AppError{
 			Id: p.bundle.LocalizeWithConfig(userLocalizer, &i18n.LocalizeConfig{
@@ -267,12 +272,16 @@ func (p *MatterpollPlugin) getCreatePollDialog(siteURL, rootID string, l *i18n.L
 		})
 	}
 
+	defaultMultiVotes := "1"
+	if c.UseMultiVotesByDefault {
+		defaultMultiVotes = "0"
+	}
 	elements = append(elements, model.DialogElement{
 		DisplayName: "Number of Votes",
 		Name:        "setting-multi",
 		Type:        "text",
 		SubType:     "number",
-		Default:     "1",
+		Default:     defaultMultiVotes,
 		HelpText: p.bundle.LocalizeWithConfig(l, &i18n.LocalizeConfig{
 			DefaultMessage: &i18n.Message{
 				ID:    "dialog.createPoll.setting.multi",

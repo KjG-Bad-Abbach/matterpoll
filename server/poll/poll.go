@@ -71,8 +71,8 @@ func NewPoll(creator, question string, answerOptions []string, settings Settings
 }
 
 // NewSettingsFromStrings creates a new settings with the given parameter.
-func NewSettingsFromStrings(strs []string) (Settings, *utils.ErrorMessage) {
-	settings := Settings{MaxVotes: 1}
+func NewSettingsFromStrings(strs []string, defaultMaxVotes int) (Settings, *utils.ErrorMessage) {
+	settings := Settings{MaxVotes: defaultMaxVotes}
 	for _, str := range strs {
 		switch {
 		case str == SettingKeyAnonymous:
@@ -105,8 +105,8 @@ func NewSettingsFromStrings(strs []string) (Settings, *utils.ErrorMessage) {
 }
 
 // NewSettingsFromSubmission creates a new settings with the given parameter.
-func NewSettingsFromSubmission(submission map[string]interface{}) Settings {
-	settings := Settings{MaxVotes: 1}
+func NewSettingsFromSubmission(submission map[string]interface{}, defaultMaxVotes int) Settings {
+	settings := Settings{MaxVotes: defaultMaxVotes}
 	for k, v := range submission {
 		if k == "setting-multi" {
 			f, ok := v.(float64)

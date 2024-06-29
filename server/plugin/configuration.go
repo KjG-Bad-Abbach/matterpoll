@@ -12,6 +12,7 @@ type configuration struct {
 	Trigger                 string          `json:"trigger"`
 	ExperimentalUI          bool            `json:"experimentalui"`
 	DoubleClickShouldToggle bool            `json:"double_click_should_toggle"`
+	UseMultiVotesByDefault  bool            `json:"use_multi_votes_by_default"`
 	DefaultSettings         map[string]bool `json:"default_settings"`
 }
 

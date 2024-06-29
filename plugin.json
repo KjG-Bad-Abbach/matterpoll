@@ -44,6 +44,13 @@
                 "default": false
             },
             {
+                "key": "use_multi_votes_by_default",
+                "display_name": "Use Multi Votes by Default:",
+                "type": "bool",
+                "help_text": "When true, users can vote for multiple options by default. Users can still vote for only one option by using the `/poll` command with the `--votes=1` option.",
+                "default": false
+            },
+            {
                 "key": "default_settings",
                 "display_name": "Default Settings",
                 "type": "custom",

@@ -286,6 +286,12 @@ func (p *MatterpollPlugin) handleSubmitDialogRequest(handler submitDialogHandler
 
 func (p *MatterpollPlugin) handleCreatePoll(_ map[string]string, request *model.SubmitDialogRequest) (*i18n.Message, *model.SubmitDialogResponse, error) {
 	creatorID := request.UserId
+	configuration := p.getConfiguration()
+
+	defaultMaxVotes := 1
+	if configuration.UseMultiVotesByDefault {
+		defaultMaxVotes = 0
+	}
 
 	question, ok := request.Submission[questionKey].(string)
 	if !ok {
@@ -312,7 +318,7 @@ func (p *MatterpollPlugin) handleCreatePoll(_ map[string]string, request *model.
 
 	userLocalizer := p.bundle.GetUserLocalizer(creatorID)
 
-	settings := poll.NewSettingsFromSubmission(request.Submission)
+	settings := poll.NewSettingsFromSubmission(request.Submission, defaultMaxVotes)
 	poll, errMsg := poll.NewPoll(creatorID, question, answerOptions, settings)
 	if errMsg != nil {
 		response := &model.SubmitDialogResponse{

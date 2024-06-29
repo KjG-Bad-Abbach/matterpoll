@@ -154,7 +154,7 @@ func TestNewSettingsFromStrings(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			assert := assert.New(t)
 
-			settings, errMsg := poll.NewSettingsFromStrings(test.Strs)
+			settings, errMsg := poll.NewSettingsFromStrings(test.Strs, 1)
 			if test.ShouldError {
 				assert.NotNil(errMsg)
 			} else {
@@ -214,7 +214,7 @@ func TestNewSettingsFromSubmission(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			assert := assert.New(t)
 
-			settings := poll.NewSettingsFromSubmission(test.Submission)
+			settings := poll.NewSettingsFromSubmission(test.Submission, 1)
 			assert.Equal(test.ExpectedSettings, settings)
 		})
 	}
