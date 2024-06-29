@@ -541,6 +541,7 @@ func TestHandleCreatePoll(t *testing.T) {
 			store := test.SetupStore(&mockstore.Store{})
 			defer store.AssertExpectations(t)
 			p := setupTestPlugin(t, api, store)
+			p.configuration.DialogOptionsCount = 3
 
 			patch1, _ := mpatch.PatchMethod(model.GetMillis, func() int64 { return 1234567890 })
 			patch2, _ := mpatch.PatchMethod(model.NewId, testutils.GetPollID)

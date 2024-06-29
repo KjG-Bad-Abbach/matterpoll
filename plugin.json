@@ -51,6 +51,13 @@
                 "default": false
             },
             {
+                "key": "dialog_options_count",
+                "display_name": "Dialog Options Count:",
+                "type": "number",
+                "help_text": "The number of options that will be displayed in the 'Create Poll' dialog. The number of options must be at least 2.",
+                "default": 3
+            },
+            {
                 "key": "default_settings",
                 "display_name": "Default Settings",
                 "type": "custom",

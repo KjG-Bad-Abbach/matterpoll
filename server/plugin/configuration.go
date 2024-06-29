@@ -13,6 +13,7 @@ type configuration struct {
 	ExperimentalUI          bool            `json:"experimentalui"`
 	DoubleClickShouldToggle bool            `json:"double_click_should_toggle"`
 	UseMultiVotesByDefault  bool            `json:"use_multi_votes_by_default"`
+	DialogOptionsCount      int             `json:"dialog_options_count"`
 	DefaultSettings         map[string]bool `json:"default_settings"`
 }
 
@@ -28,6 +29,10 @@ func (p *MatterpollPlugin) OnConfigurationChange() error {
 
 	if configuration.Trigger == "" {
 		return errors.New("empty trigger not allowed")
+	}
+
+	if configuration.DialogOptionsCount < 2 {
+		configuration.DialogOptionsCount = 2
 	}
 
 	// This require a loaded i18n bundle

@@ -255,7 +255,7 @@ func (p *MatterpollPlugin) getCreatePollDialog(siteURL, rootID string, l *i18n.L
 		Type:    "text",
 		SubType: "text",
 	}}
-	for i := 1; i < 4; i++ {
+	for i := 1; i <= c.DialogOptionsCount; i++ {
 		elements = append(elements, model.DialogElement{
 			DisplayName: p.bundle.LocalizeWithConfig(l, &i18n.LocalizeConfig{
 				DefaultMessage: &i18n.Message{

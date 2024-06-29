@@ -496,6 +496,7 @@ func TestPluginExecuteCommand(t *testing.T) {
 			defer store.AssertExpectations(t)
 			p := setupTestPlugin(t, api, store)
 			p.configuration.Trigger = trigger
+			p.configuration.DialogOptionsCount = 3
 			p.configuration.DefaultSettings = map[string]bool{"anonymous": true, "publicAddOption": true}
 
 			patch1, _ := mpatch.PatchMethod(model.GetMillis, func() int64 { return 1234567890 })

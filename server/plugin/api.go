@@ -311,9 +311,11 @@ func (p *MatterpollPlugin) handleCreatePoll(_ map[string]string, request *model.
 	}
 	answerOptions = append(answerOptions, o2)
 
-	o3, ok := request.Submission["option3"].(string)
-	if ok && o3 != "" {
-		answerOptions = append(answerOptions, o3)
+	for i := 3; i <= configuration.DialogOptionsCount; i++ {
+		o, ok := request.Submission[fmt.Sprintf("option%v", i)].(string)
+		if ok && o != "" {
+			answerOptions = append(answerOptions, o)
+		}
 	}
 
 	userLocalizer := p.bundle.GetUserLocalizer(creatorID)

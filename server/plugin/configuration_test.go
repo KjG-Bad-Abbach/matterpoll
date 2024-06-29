@@ -58,7 +58,7 @@ func TestOnConfigurationChange(t *testing.T) {
 				return api
 			},
 			Configuration:         &configuration{Trigger: "oldTrigger", ExperimentalUI: false, DefaultSettings: getDefaultSettings(false, false, true, true)},
-			ExpectedConfiguration: &configuration{Trigger: "poll", ExperimentalUI: true, DefaultSettings: getDefaultSettings(true, true, false, false)},
+			ExpectedConfiguration: &configuration{Trigger: "poll", ExperimentalUI: true, DialogOptionsCount: 2, DefaultSettings: getDefaultSettings(true, true, false, false)},
 			ShouldError:           false,
 		},
 		"Load and save successful, without old configuration": {
@@ -78,7 +78,7 @@ func TestOnConfigurationChange(t *testing.T) {
 				return api
 			},
 			Configuration:         nil,
-			ExpectedConfiguration: &configuration{Trigger: "poll", ExperimentalUI: true, DefaultSettings: getDefaultSettings(false, false, true, true)},
+			ExpectedConfiguration: &configuration{Trigger: "poll", ExperimentalUI: true, DialogOptionsCount: 2, DefaultSettings: getDefaultSettings(false, false, true, true)},
 			ShouldError:           false,
 		},
 		"LoadPluginConfiguration fails": {
