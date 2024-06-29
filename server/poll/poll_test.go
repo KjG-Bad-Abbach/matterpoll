@@ -306,12 +306,13 @@ func TestDecode(t *testing.T) {
 
 func TestUpdateVote(t *testing.T) {
 	for name, test := range map[string]struct {
-		Poll          poll.Poll
-		UserID        string
-		Index         int
-		ExpectedPoll  poll.Poll
-		Error         bool
-		ReturnMessage bool
+		Poll                    poll.Poll
+		UserID                  string
+		Index                   int
+		ExpectedPoll            poll.Poll
+		Error                   bool
+		ReturnMessage           bool
+		DoubleClickShouldToggle bool
 	}{
 		"Negative Index": {
 			Poll: poll.Poll{
@@ -530,6 +531,56 @@ func TestUpdateVote(t *testing.T) {
 			Error:         false,
 			ReturnMessage: true,
 		},
+		"Multi votes setting, toggle vote": {
+			Poll: poll.Poll{
+				Question: "Question",
+				AnswerOptions: []*poll.AnswerOption{
+					{Answer: "Answer 1", Voter: []string{"a"}},
+					{Answer: "Answer 2"},
+					{Answer: "Answer 3"},
+				},
+				Settings: poll.Settings{MaxVotes: 2},
+			},
+			UserID: "a",
+			Index:  0,
+			ExpectedPoll: poll.Poll{
+				Question: "Question",
+				AnswerOptions: []*poll.AnswerOption{
+					{Answer: "Answer 1", Voter: []string{}},
+					{Answer: "Answer 2"},
+					{Answer: "Answer 3"},
+				},
+				Settings: poll.Settings{MaxVotes: 2},
+			},
+			Error:                   false,
+			ReturnMessage:           false,
+			DoubleClickShouldToggle: true,
+		},
+		"Multi votes setting, with progress option, toggle vote": {
+			Poll: poll.Poll{
+				Question: "Question",
+				AnswerOptions: []*poll.AnswerOption{
+					{Answer: "Answer 1", Voter: []string{"a"}},
+					{Answer: "Answer 2"},
+					{Answer: "Answer 3"},
+				},
+				Settings: poll.Settings{Progress: true, MaxVotes: 2},
+			},
+			UserID: "a",
+			Index:  0,
+			ExpectedPoll: poll.Poll{
+				Question: "Question",
+				AnswerOptions: []*poll.AnswerOption{
+					{Answer: "Answer 1", Voter: []string{}},
+					{Answer: "Answer 2"},
+					{Answer: "Answer 3"},
+				},
+				Settings: poll.Settings{Progress: true, MaxVotes: 2},
+			},
+			Error:                   false,
+			ReturnMessage:           false,
+			DoubleClickShouldToggle: true,
+		},
 		"Multi votes setting, exceed votes error": {
 			Poll: poll.Poll{
 				Question: "Question",
@@ -606,7 +657,7 @@ func TestUpdateVote(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			assert := assert.New(t)
 
-			msg, err := test.Poll.UpdateVote(test.UserID, test.Index)
+			msg, err := test.Poll.UpdateVote(test.UserID, test.Index, test.DoubleClickShouldToggle)
 
 			if test.Error {
 				assert.NotNil(err)
@@ -876,7 +927,7 @@ func TestPollCopy(t *testing.T) {
 		p := testutils.GetPollWithVotes()
 		p2 := p.Copy()
 
-		msg, err := p.UpdateVote("userID1", 0)
+		msg, err := p.UpdateVote("userID1", 0, false)
 		require.Nil(t, msg)
 		require.NoError(t, err)
 		assert.NotEqual(p, p2)

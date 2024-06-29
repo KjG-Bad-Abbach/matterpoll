@@ -37,6 +37,13 @@
                 "default": false
             },
             {
+                "key": "double_click_should_toggle",
+                "display_name": "Double Click Should Toggle:",
+                "type": "bool",
+                "help_text": "When true, users can toggle their vote by clicking on the option they already voted for.",
+                "default": false
+            },
+            {
                 "key": "default_settings",
                 "display_name": "Default Settings",
                 "type": "custom",

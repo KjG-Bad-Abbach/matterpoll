@@ -357,6 +357,7 @@ func (p *MatterpollPlugin) handleCreatePoll(_ map[string]string, request *model.
 }
 
 func (p *MatterpollPlugin) handleVote(vars map[string]string, request *model.PostActionIntegrationRequest) (*i18n.LocalizeConfig, *model.Post, error) {
+	configuration := p.getConfiguration()
 	pollID := vars["id"]
 	optionNumber, _ := strconv.Atoi(vars["optionNumber"])
 	userID := request.UserId
@@ -373,7 +374,7 @@ func (p *MatterpollPlugin) handleVote(vars map[string]string, request *model.Pos
 
 	prev := poll.Copy()
 	previouslyVoted := poll.HasVoted(userID)
-	msg, err := poll.UpdateVote(userID, optionNumber)
+	msg, err := poll.UpdateVote(userID, optionNumber, configuration.DoubleClickShouldToggle)
 	if msg != nil {
 		return &i18n.LocalizeConfig{DefaultMessage: msg}, nil, nil
 	}

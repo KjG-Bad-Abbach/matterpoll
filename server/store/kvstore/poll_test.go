@@ -90,7 +90,7 @@ func TestPollStoreUpdate(t *testing.T) {
 	t.Run("all fine", func(t *testing.T) {
 		oldPoll := testutils.GetPoll()
 		newPoll := oldPoll.Copy()
-		msg, err := newPoll.UpdateVote(model.NewId(), 0)
+		msg, err := newPoll.UpdateVote(model.NewId(), 0, false)
 		require.Nil(t, msg)
 		require.NoError(t, err)
 		opt := model.PluginKVSetOptions{
@@ -109,7 +109,7 @@ func TestPollStoreUpdate(t *testing.T) {
 	t.Run("KVSetWithOptions() fails", func(t *testing.T) {
 		oldPoll := testutils.GetPoll()
 		newPoll := oldPoll.Copy()
-		msg, err := newPoll.UpdateVote(model.NewId(), 0)
+		msg, err := newPoll.UpdateVote(model.NewId(), 0, false)
 		require.Nil(t, msg)
 		require.NoError(t, err)
 		opt := model.PluginKVSetOptions{
@@ -128,7 +128,7 @@ func TestPollStoreUpdate(t *testing.T) {
 	t.Run("db compare fails fails", func(t *testing.T) {
 		oldPoll := testutils.GetPoll()
 		newPoll := oldPoll.Copy()
-		msg, err := newPoll.UpdateVote(model.NewId(), 0)
+		msg, err := newPoll.UpdateVote(model.NewId(), 0, false)
 		require.Nil(t, msg)
 		require.NoError(t, err)
 		opt := model.PluginKVSetOptions{

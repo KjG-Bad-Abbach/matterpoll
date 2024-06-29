@@ -617,18 +617,18 @@ func TestHandleVote(t *testing.T) {
 
 	poll1In := testutils.GetPoll()
 	poll1Out := poll1In.Copy()
-	msg, err := poll1Out.UpdateVote("userID1", 0)
+	msg, err := poll1Out.UpdateVote("userID1", 0, false)
 	require.Nil(t, msg)
 	require.Nil(t, err)
 	expectedPost1 := &model.Post{}
 	model.ParseSlackAttachment(expectedPost1, poll1Out.ToPostActions(testutils.GetBundle(), root.Manifest.Id, "John Doe"))
 
 	poll2In := testutils.GetPoll()
-	msg, err = poll2In.UpdateVote("userID1", 0)
+	msg, err = poll2In.UpdateVote("userID1", 0, false)
 	require.Nil(t, msg)
 	require.Nil(t, err)
 	poll2Out := poll2In.Copy()
-	msg, err = poll2Out.UpdateVote("userID1", 1)
+	msg, err = poll2Out.UpdateVote("userID1", 1, false)
 	require.Nil(t, msg)
 	require.Nil(t, err)
 	expectedPost2 := &model.Post{}
@@ -636,45 +636,45 @@ func TestHandleVote(t *testing.T) {
 
 	poll3In := testutils.GetPollWithSettings(poll.Settings{MaxVotes: 2})
 	poll3Out := poll3In.Copy()
-	msg, err = poll3Out.UpdateVote("userID2", 0)
+	msg, err = poll3Out.UpdateVote("userID2", 0, false)
 	require.Nil(t, msg)
 	require.Nil(t, err)
 	expectedPost3 := &model.Post{}
 	model.ParseSlackAttachment(expectedPost3, poll3Out.ToPostActions(testutils.GetBundle(), root.Manifest.Id, "John Doe"))
 
 	poll4In := testutils.GetPollWithSettings(poll.Settings{MaxVotes: 2})
-	msg, err = poll4In.UpdateVote("userID1", 0)
+	msg, err = poll4In.UpdateVote("userID1", 0, false)
 	require.Nil(t, msg)
 	require.Nil(t, err)
 	poll4Out := poll4In.Copy()
-	msg, err = poll4Out.UpdateVote("userID1", 1)
+	msg, err = poll4Out.UpdateVote("userID1", 1, false)
 	require.Nil(t, msg)
 	require.Nil(t, err)
 	expectedPost4 := &model.Post{}
 	model.ParseSlackAttachment(expectedPost4, poll4Out.ToPostActions(testutils.GetBundle(), root.Manifest.Id, "John Doe"))
 
 	poll5In := testutils.GetPollWithSettings(poll.Settings{MaxVotes: 2})
-	msg, err = poll5In.UpdateVote("userID1", 0)
+	msg, err = poll5In.UpdateVote("userID1", 0, false)
 	require.Nil(t, msg)
 	require.Nil(t, err)
-	msg, err = poll5In.UpdateVote("userID1", 1)
+	msg, err = poll5In.UpdateVote("userID1", 1, false)
 	require.Nil(t, msg)
 	require.Nil(t, err)
 
 	poll6In := testutils.GetPollWithSettings(poll.Settings{MaxVotes: 2})
 	poll6Out := poll6In.Copy()
-	msg, err = poll6Out.UpdateVote("userID2", 1)
+	msg, err = poll6Out.UpdateVote("userID2", 1, false)
 	require.Nil(t, msg)
 	require.Nil(t, err)
 	expectedPost6 := &model.Post{}
 	model.ParseSlackAttachment(expectedPost6, poll6Out.ToPostActions(testutils.GetBundle(), root.Manifest.Id, "John Doe"))
 
 	poll7In := testutils.GetPollWithSettings(poll.Settings{Progress: true, MaxVotes: 1})
-	msg, err = poll7In.UpdateVote("userID1", 0)
+	msg, err = poll7In.UpdateVote("userID1", 0, false)
 	require.Nil(t, msg)
 	require.Nil(t, err)
 	poll7Out := poll7In.Copy()
-	msg, err = poll7Out.UpdateVote("userID1", 1)
+	msg, err = poll7Out.UpdateVote("userID1", 1, false)
 	require.Nil(t, msg)
 	require.Nil(t, err)
 	expectedPost7 := &model.Post{}
@@ -683,7 +683,7 @@ func TestHandleVote(t *testing.T) {
 
 	poll8In := testutils.GetPollWithSettings(poll.Settings{MaxVotes: 0})
 	poll8Out := poll8In.Copy()
-	msg, err = poll8Out.UpdateVote("userID2", 0)
+	msg, err = poll8Out.UpdateVote("userID2", 0, false)
 	require.Nil(t, msg)
 	require.Nil(t, err)
 	expectedPost8 := &model.Post{}
@@ -916,7 +916,7 @@ func TestHandleVote(t *testing.T) {
 			SetupStore: func(store *mockstore.Store) *mockstore.Store {
 				pollIn := testutils.GetPoll()
 				pollOut := pollIn.Copy()
-				msg, err := pollOut.UpdateVote("userID1", 0)
+				msg, err := pollOut.UpdateVote("userID1", 0, false)
 				require.Nil(t, msg)
 				require.Nil(t, err)
 
@@ -1162,7 +1162,7 @@ func TestHandleResetVotes(t *testing.T) {
 	}
 
 	poll2WithVotesWithProgress := pollEmptyWithProgress.Copy()
-	msg, err := poll2WithVotesWithProgress.UpdateVote("userID1", 0)
+	msg, err := poll2WithVotesWithProgress.UpdateVote("userID1", 0, false)
 	require.Nil(t, msg)
 	require.Nil(t, err)
 
@@ -1185,23 +1185,23 @@ func TestHandleResetVotes(t *testing.T) {
 	model.ParseSlackAttachment(expectedPostWithProgress, pollEmptyWithProgress.ToPostActions(testutils.GetBundle(), root.Manifest.Id, "John Doe"))
 
 	poll2WithVotes := poll.Copy()
-	msg, err = poll2WithVotes.UpdateVote("userID1", 0)
+	msg, err = poll2WithVotes.UpdateVote("userID1", 0, false)
 	require.Nil(t, msg)
 	require.Nil(t, err)
 
 	poll3WithVotes := poll.Copy()
-	msg, err = poll3WithVotes.UpdateVote("userID1", 0)
+	msg, err = poll3WithVotes.UpdateVote("userID1", 0, false)
 	require.Nil(t, msg)
 	require.Nil(t, err)
-	msg, err = poll3WithVotes.UpdateVote("userID1", 1)
+	msg, err = poll3WithVotes.UpdateVote("userID1", 1, false)
 	require.Nil(t, msg)
 	require.Nil(t, err)
-	msg, err = poll3WithVotes.UpdateVote("userID1", 2)
+	msg, err = poll3WithVotes.UpdateVote("userID1", 2, false)
 	require.Nil(t, msg)
 	require.Nil(t, err)
 
 	poll4WithVotes := poll.Copy()
-	msg, err = poll4WithVotes.UpdateVote("userID1", 0)
+	msg, err = poll4WithVotes.UpdateVote("userID1", 0, false)
 	require.Nil(t, msg)
 	require.Nil(t, err)
 

@@ -217,7 +217,7 @@ func (p *Poll) AddAnswerOption(newAnswerOption string) *utils.ErrorMessage {
 }
 
 // UpdateVote performs a vote for a given user
-func (p *Poll) UpdateVote(userID string, index int) (*i18n.Message, error) {
+func (p *Poll) UpdateVote(userID string, index int, doubleClickShouldToggle bool) (*i18n.Message, error) {
 	if len(p.AnswerOptions) <= index || index < 0 {
 		return nil, fmt.Errorf("invalid index")
 	}
@@ -227,6 +227,19 @@ func (p *Poll) UpdateVote(userID string, index int) (*i18n.Message, error) {
 
 	if p.IsMultiVote() {
 		// Multi Answer Mode
+
+		if doubleClickShouldToggle {
+			// Toggle vote, if user has already voted for this option
+			for i := 0; i < len(p.AnswerOptions[index].Voter); i++ {
+				if userID == p.AnswerOptions[index].Voter[i] {
+					// Remove vote
+					p.AnswerOptions[index].Voter = append(p.AnswerOptions[index].Voter[:i], p.AnswerOptions[index].Voter[i+1:]...)
+					return nil, nil
+				}
+			}
+		}
+
+		// Check if user has already voted for this option
 		votedAnswers := p.GetVotedAnswers(userID)
 		for _, answer := range votedAnswers {
 			if answer == p.AnswerOptions[index].Answer {
@@ -236,6 +249,7 @@ func (p *Poll) UpdateVote(userID string, index int) (*i18n.Message, error) {
 				}, nil
 			}
 		}
+
 		if p.Settings.MaxVotes != 0 && p.Settings.MaxVotes <= len(votedAnswers) {
 			return &i18n.Message{
 				ID:    "poll.updateVote.maxVotes",
