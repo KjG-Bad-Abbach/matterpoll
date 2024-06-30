@@ -29,9 +29,10 @@ func TestNewPoll(t *testing.T) {
 	option4 := "" // invalid: empty option
 
 	for name, test := range map[string]struct {
-		Options     []string
-		Settings    poll.Settings
-		ShouldError bool
+		Options          []string
+		Settings         poll.Settings
+		ExpectedSettings *poll.Settings
+		ShouldError      bool
 	}{
 		"fine, default settings": {
 			Options:     []string{option1, option2},
@@ -54,14 +55,15 @@ func TestNewPoll(t *testing.T) {
 			ShouldError: true,
 		},
 		"invalid, empty option": {
-			Options:     []string{option1, option2, option4}, // options1 is duplicated
+			Options:     []string{option1, option2, option4},
 			Settings:    poll.Settings{Anonymous: true, Progress: true, PublicAddOption: true, MaxVotes: 1},
 			ShouldError: true,
 		},
-		"invalid, votes setting exceeds": {
-			Options:     []string{option1, option2, option3}, // options1 is duplicated
-			Settings:    poll.Settings{Anonymous: true, Progress: true, PublicAddOption: true, MaxVotes: 4},
-			ShouldError: true,
+		"valid, votes setting exceeds": {
+			Options:          []string{option1, option2, option3},
+			Settings:         poll.Settings{Anonymous: true, Progress: true, PublicAddOption: true, MaxVotes: 4},
+			ExpectedSettings: &poll.Settings{Anonymous: true, Progress: true, PublicAddOption: true, MaxVotes: 0},
+			ShouldError:      false,
 		},
 	} {
 		t.Run(name, func(t *testing.T) {
@@ -83,7 +85,10 @@ func TestNewPoll(t *testing.T) {
 					assert.Equal(&poll.AnswerOption{Answer: test.Options[i], Voter: []string{}}, o)
 				}
 
-				assert.Equal(test.Settings, p.Settings)
+				if test.ExpectedSettings == nil {
+					test.ExpectedSettings = &test.Settings
+				}
+				assert.Equal(*test.ExpectedSettings, p.Settings)
 			}
 		})
 	}

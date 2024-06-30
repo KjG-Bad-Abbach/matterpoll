@@ -62,6 +62,9 @@ func NewPoll(creator, question string, answerOptions []string, settings Settings
 			return nil, errMsg
 		}
 	}
+	if (p.Settings.MaxVotes > len(p.AnswerOptions)) || (p.Settings.MaxVotes < 0) {
+		p.Settings.MaxVotes = 0
+	}
 
 	if errMsg := p.validate(); errMsg != nil {
 		return nil, errMsg
