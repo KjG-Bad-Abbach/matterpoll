@@ -58,6 +58,13 @@
                 "default": 3
             },
             {
+                "key": "show_progress_with_users",
+                "display_name": "Show Progress with Users:",
+                "type": "bool",
+                "help_text": "When true and the poll was created with the `--progress` option, users can see who voted for which option.",
+                "default": false
+            },
+            {
                 "key": "default_settings",
                 "display_name": "Default Settings",
                 "type": "custom",

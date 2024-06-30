@@ -68,11 +68,26 @@ var (
 )
 
 // ToPostActions returns the poll as a message
-func (p *Poll) ToPostActions(bundle *utils.Bundle, pluginID, authorName string) []*model.SlackAttachment {
+func (p *Poll) ToPostActions(bundle *utils.Bundle, pluginID, authorName string, convert IDToNameConverter, showProgressWithUsers bool) []*model.SlackAttachment {
 	localizer := bundle.GetServerLocalizer()
 	numberOfVotes := 0
 	voters := make(map[string]struct{})
+	var fields []*model.SlackAttachmentField = nil
 	actions := []*model.PostAction{}
+
+	if showProgressWithUsers {
+		convertWithFallback := func(userID string) (string, *model.AppError) {
+			displayName, err := convert(userID)
+			if err != nil {
+				return "unknown user", nil
+			}
+			return displayName, nil
+		}
+
+		if p.Settings.Progress {
+			fields, _ = p.createFieldsForVotes(bundle, convertWithFallback)
+		}
+	}
 
 	for i, o := range p.AnswerOptions {
 		numberOfVotes += len(o.Voter)
@@ -159,6 +174,7 @@ func (p *Poll) ToPostActions(bundle *utils.Bundle, pluginID, authorName string) 
 		AuthorName: authorName,
 		Title:      p.Question,
 		Text:       p.makeAdditionalText(bundle, numberOfVotes, len(voters)),
+		Fields:     fields,
 		Actions:    actions,
 	}}
 }
@@ -195,10 +211,8 @@ func (p *Poll) makeAdditionalText(bundle *utils.Bundle, numberOfVotes, numberOfV
 	return strings.Join(lines, "\n")
 }
 
-// ToEndPollPost returns the poll end message
-func (p *Poll) ToEndPollPost(bundle *utils.Bundle, authorName string, convert IDToNameConverter) (*model.Post, *model.AppError) {
+func (p *Poll) createFieldsForVotes(bundle *utils.Bundle, convert IDToNameConverter) ([]*model.SlackAttachmentField, *model.AppError) {
 	localizer := bundle.GetServerLocalizer()
-	post := &model.Post{}
 	fields := []*model.SlackAttachmentField{}
 
 	for _, o := range p.AnswerOptions {
@@ -230,6 +244,18 @@ func (p *Poll) ToEndPollPost(bundle *utils.Bundle, authorName string, convert ID
 			}),
 			Value: voter,
 		})
+	}
+	return fields, nil
+}
+
+// ToEndPollPost returns the poll end message
+func (p *Poll) ToEndPollPost(bundle *utils.Bundle, authorName string, convert IDToNameConverter) (*model.Post, *model.AppError) {
+	localizer := bundle.GetServerLocalizer()
+	post := &model.Post{}
+	fields, err := p.createFieldsForVotes(bundle, convert)
+
+	if err != nil {
+		return nil, err
 	}
 
 	if p.Settings.AnonymousCreator {

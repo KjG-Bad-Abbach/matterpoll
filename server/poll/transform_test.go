@@ -121,6 +121,21 @@ func TestPollToEndPollPost(t *testing.T) {
 }
 
 func TestPollToPostActions(t *testing.T) {
+	converter := func(userID string) (string, *model.AppError) {
+		switch userID {
+		case "userID1":
+			return "@user1", nil
+		case "userID2":
+			return "@user2", nil
+		case "userID3":
+			return "@user3", nil
+		case "userID4":
+			return "@user4", nil
+		default:
+			return "", &model.AppError{}
+		}
+	}
+
 	PluginID := "com.github.matterpoll.matterpoll"
 	authorName := "John Doe"
 	currentAPIVersion := "v1"
@@ -600,7 +615,7 @@ func TestPollToPostActions(t *testing.T) {
 		},
 	} {
 		t.Run(name, func(t *testing.T) {
-			assert.Equal(t, test.ExpectedAttachments, test.Poll.ToPostActions(testutils.GetBundle(), PluginID, authorName))
+			assert.Equal(t, test.ExpectedAttachments, test.Poll.ToPostActions(testutils.GetBundle(), PluginID, authorName, converter, false))
 		})
 	}
 }

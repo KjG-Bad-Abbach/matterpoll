@@ -194,7 +194,7 @@ func (p *MatterpollPlugin) executeCommand(args *model.CommandArgs) (string, *mod
 		return p.bundle.LocalizeDefaultMessage(userLocalizer, commandErrorGeneric), nil
 	}
 
-	actions := newPoll.ToPostActions(p.bundle, root.Manifest.Id, displayName)
+	actions := newPoll.ToPostActions(p.bundle, root.Manifest.Id, displayName, p.ConvertUserIDToDisplayName, configuration.ShowProgressWithUsers)
 	post := &model.Post{
 		UserId:    p.botUserID,
 		ChannelId: args.ChannelId,

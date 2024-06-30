@@ -14,6 +14,7 @@ type configuration struct {
 	DoubleClickShouldToggle bool            `json:"double_click_should_toggle"`
 	UseMultiVotesByDefault  bool            `json:"use_multi_votes_by_default"`
 	DialogOptionsCount      int             `json:"dialog_options_count"`
+	ShowProgressWithUsers   bool            `json:"show_progress_with_users"`
 	DefaultSettings         map[string]bool `json:"default_settings"`
 }
 

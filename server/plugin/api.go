@@ -334,7 +334,7 @@ func (p *MatterpollPlugin) handleCreatePoll(_ map[string]string, request *model.
 		return commandErrorGeneric, nil, errors.Wrap(appErr, "failed to get display name for creator")
 	}
 
-	actions := poll.ToPostActions(p.bundle, root.Manifest.Id, displayName)
+	actions := poll.ToPostActions(p.bundle, root.Manifest.Id, displayName, p.ConvertUserIDToDisplayName, configuration.ShowProgressWithUsers)
 	post := &model.Post{
 		UserId:    p.botUserID,
 		ChannelId: request.ChannelId,
@@ -397,7 +397,7 @@ func (p *MatterpollPlugin) handleVote(vars map[string]string, request *model.Pos
 	go p.publishPollMetadata(poll, userID)
 
 	post := &model.Post{}
-	model.ParseSlackAttachment(post, poll.ToPostActions(p.bundle, root.Manifest.Id, displayName))
+	model.ParseSlackAttachment(post, poll.ToPostActions(p.bundle, root.Manifest.Id, displayName, p.ConvertUserIDToDisplayName, configuration.ShowProgressWithUsers))
 	post.AddProp("poll_id", poll.ID)
 	if poll.Settings.Progress {
 		post.AddProp("card", poll.ToCard(p.bundle, p.ConvertUserIDToDisplayName))
@@ -445,6 +445,7 @@ func (p *MatterpollPlugin) publishPollMetadata(poll *poll.Poll, userID string) {
 func (p *MatterpollPlugin) handleResetVotes(vars map[string]string, request *model.PostActionIntegrationRequest) (*i18n.LocalizeConfig, *model.Post, error) {
 	pollID := vars["id"]
 	userID := request.UserId
+	configuration := p.getConfiguration()
 
 	poll, err := p.Store.Poll().Get(pollID)
 	if err != nil {
@@ -475,7 +476,7 @@ func (p *MatterpollPlugin) handleResetVotes(vars map[string]string, request *mod
 	go p.publishPollMetadata(poll, userID)
 
 	post := &model.Post{}
-	model.ParseSlackAttachment(post, poll.ToPostActions(p.bundle, root.Manifest.Id, displayName))
+	model.ParseSlackAttachment(post, poll.ToPostActions(p.bundle, root.Manifest.Id, displayName, p.ConvertUserIDToDisplayName, configuration.ShowProgressWithUsers))
 	post.AddProp("poll_id", poll.ID)
 	if poll.Settings.Progress {
 		post.AddProp("card", poll.ToCard(p.bundle, p.ConvertUserIDToDisplayName))
@@ -544,6 +545,7 @@ func (p *MatterpollPlugin) handleAddOption(vars map[string]string, request *mode
 
 func (p *MatterpollPlugin) handleAddOptionConfirm(vars map[string]string, request *model.SubmitDialogRequest) (*i18n.Message, *model.SubmitDialogResponse, error) {
 	pollID := vars["id"]
+	configuration := p.getConfiguration()
 
 	poll, err := p.Store.Poll().Get(pollID)
 	if err != nil {
@@ -585,7 +587,7 @@ func (p *MatterpollPlugin) handleAddOptionConfirm(vars map[string]string, reques
 		return nil, response, nil
 	}
 
-	model.ParseSlackAttachment(post, poll.ToPostActions(p.bundle, root.Manifest.Id, displayName))
+	model.ParseSlackAttachment(post, poll.ToPostActions(p.bundle, root.Manifest.Id, displayName, p.ConvertUserIDToDisplayName, configuration.ShowProgressWithUsers))
 	if poll.Settings.Progress {
 		post.AddProp("card", poll.ToCard(p.bundle, p.ConvertUserIDToDisplayName))
 	}
