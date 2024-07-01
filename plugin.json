@@ -23,14 +23,14 @@
     "settings_schema": {
         "settings": [
             {
-                "key": "Trigger",
+                "key": "trigger",
                 "display_name": "Trigger Word:",
                 "type": "text",
                 "help_text": "Trigger Word must be unique, cannot begin with a slash, and cannot contain any spaces.",
                 "default": "poll"
             },
             {
-                "key": "ExperimentalUI",
+                "key": "experimentalui",
                 "display_name": "Experimental UI:",
                 "type": "bool",
                 "help_text": "When true, Matterpoll will render poll posts with a rich UI. The rich UI is not available on the mobile app.",
