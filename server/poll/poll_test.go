@@ -85,10 +85,11 @@ func TestNewPoll(t *testing.T) {
 					assert.Equal(&poll.AnswerOption{Answer: test.Options[i], Voter: []string{}}, o)
 				}
 
-				if test.ExpectedSettings == nil {
-					test.ExpectedSettings = &test.Settings
+				expectedSettings := test.Settings
+				if test.ExpectedSettings != nil {
+					expectedSettings = *test.ExpectedSettings
 				}
-				assert.Equal(*test.ExpectedSettings, p.Settings)
+				assert.Equal(expectedSettings, p.Settings)
 			}
 		})
 	}

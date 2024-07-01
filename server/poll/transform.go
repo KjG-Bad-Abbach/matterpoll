@@ -72,7 +72,7 @@ func (p *Poll) ToPostActions(bundle *utils.Bundle, pluginID, authorName string, 
 	localizer := bundle.GetServerLocalizer()
 	numberOfVotes := 0
 	voters := make(map[string]struct{})
-	var fields []*model.SlackAttachmentField = nil
+	var fields []*model.SlackAttachmentField
 	actions := []*model.PostAction{}
 
 	if showProgressWithUsers {
